@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Student } from './Student';
 import { addStudent } from '../slides/Student';
 import { message } from 'antd';
@@ -13,6 +13,7 @@ const defaultValues = {
 
 const FormStudent = () => {
     const dispatch = useDispatch();
+    const { list } = useSelector((state) => state.students);
 
     const [formData, setFormData] = useState(defaultValues);
     const [formError, setFormError] = useState(defaultValues);
@@ -40,7 +41,16 @@ const FormStudent = () => {
                     newErrors[name] = '';
                 }
             } else {
-                newErrors[name] = '';
+                if (name === 'id') {
+                    const idExists = list.findIndex((student) => student.id === value ) !== -1; // true nếu có - false nếu không
+                    console.log("🚀 ~ handleChange ~ idExists:", idExists)
+
+                    if (idExists) {
+                        newErrors[name] = 'ID đã tồn tại. Hãy dùng ID khác!';
+                    } else {
+                        newErrors[name] = '';
+                    }
+                }
             }
         }
 
@@ -56,7 +66,8 @@ const FormStudent = () => {
         event.preventDefault();
 
         const hasError = Object.values(formError).some((item) => !!item);
-        
+        console.log("🚀 ~ handleAdd ~ hasError:", hasError)
+
         if (!hasError) {
             const { id, name, phone, email } = formData;
             const newStudent = new Student(id, name, phone, email);
@@ -65,7 +76,7 @@ const FormStudent = () => {
             message.success('Thêm Thành Công!');
 
             setFormData(defaultValues);
-            setFormError({});
+            setFormError(defaultValues);
         }
     };
 
