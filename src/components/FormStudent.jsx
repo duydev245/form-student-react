@@ -27,6 +27,8 @@ const FormStudent = () => {
                 newErrors[name] = 'Vui Lòng Nhập Thông Tin';
             }
         } else {
+            newErrors[name] = '';
+
             if (pattern) {
                 const regex = new RegExp(pattern);
                 const isValid = regex.test(value);
@@ -40,16 +42,16 @@ const FormStudent = () => {
                 } else {
                     newErrors[name] = '';
                 }
-            } else {
-                if (name === 'id') {
-                    const idExists = list.findIndex((student) => student.id === value ) !== -1; // true nếu có - false nếu không
-                    console.log("🚀 ~ handleChange ~ idExists:", idExists)
+            }
 
-                    if (idExists) {
-                        newErrors[name] = 'ID đã tồn tại. Hãy dùng ID khác!';
-                    } else {
-                        newErrors[name] = '';
-                    }
+            if (name === 'id') {
+                const idExists = list.findIndex((student) => student.id === value) !== -1; // true nếu có - false nếu không
+                console.log("🚀 ~ handleChange ~ idExists:", idExists)
+
+                if (idExists) {
+                    newErrors[name] = 'ID đã tồn tại. Hãy dùng ID khác!';
+                } else {
+                    newErrors[name] = '';
                 }
             }
         }
@@ -82,7 +84,7 @@ const FormStudent = () => {
 
     return (
         <div>
-            <div className='bg-gray-600 py-4 px-4'>
+            <div className='bg-gray-600 py-4 px-4 rounded'>
                 <h1 className='text-4xl text-white font-bold'>Thông tin sinh viên</h1>
             </div>
             <form className="max-w-md mx-auto my-6" onSubmit={handleAdd}>
